@@ -201,3 +201,6 @@ class Test_Notification(unittest.TestCase):
         test_results = test_notications.get_user_notifications(str(test_user_id))
         for test_result in test_results:
             self.assertEqual(1, test_result['read'])
+
+if __name__ == '__main__':
+    unittest.main()

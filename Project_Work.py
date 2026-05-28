@@ -487,7 +487,6 @@ class Notification: #!!*
     def __init__(self, db: Database):
         if not isinstance(db, Database):
             raise TypeError("db is not of the type Database")
-            return
 
         self.db = db
 

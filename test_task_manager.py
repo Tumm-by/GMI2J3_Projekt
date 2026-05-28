@@ -321,3 +321,6 @@ class Test_Taskmanager(unittest.TestCase):
             self.fail("Succeeded in using connection that is supposed to be closed")
         except Exception:
             self.assertTrue(True, "Successfully closed")
+
+if __name__ == '__main__':
+    unittest.main()

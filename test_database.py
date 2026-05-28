@@ -160,3 +160,6 @@ class Test_Database(unittest.TestCase):
             self.fail("DB failed to close properly")
         except sqlite3.ProgrammingError:
             self.assertTrue(True, "Expected exception occurs")
+
+if __name__ == '__main__':
+    unittest.main()
