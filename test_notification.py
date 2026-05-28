@@ -109,7 +109,7 @@ class Test_Notification(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "Message of length 0"):
             test_notifications.create_notification(str(test_user_id), "")
-        """try:
+        try:
             test_notifications.create_notification(str(test_user_id), "")
             self.fail("Creation of notification succeeded when it should fail")
             return
@@ -122,7 +122,7 @@ class Test_Notification(unittest.TestCase):
                 self.fail("Correct exception but wrong message")
                 return
         except Exception:
-            self.fail("Wrong Exception triggered")"""
+            self.fail("Wrong Exception triggered")
 
 
     def test_get_user_notifications_all(self):

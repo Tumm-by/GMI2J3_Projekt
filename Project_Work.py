@@ -718,12 +718,6 @@ class TaskManager: #!!*
             return self._analytics
         raise PermissionError("Not logged in")
 
-    @property
-    def project(self) -> str | None:
-        if self.logged_in():
-            return self._project
-        raise PermissionError("Not logged in")
-
     def logged_in(self) -> bool:
         return not self._current_user == None
 
@@ -750,10 +744,10 @@ class TaskManager: #!!*
     def close(self):
         self.db.close()
 
-    def EmailUnavailableError(Exception):
+    class EmailUnavailableError(Exception):
         """Raised when an email address is not available for use"""
         pass
-    def UserNameUnavailableError(Exception):
+    class UserNameUnavailableError(Exception):
         """Raised when an email address is not available for use"""
         pass
 
