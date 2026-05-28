@@ -501,9 +501,7 @@ class Notification: #!!*
             self.db.conn.commit()
         except sqlite3.IntegrityError as ex:
             error_message = str(ex)
-            if "UNIQUE constraint failed: notifications.id" in error_message:
-                pass
-            elif "FOREIGN KEY constraint failed" in error_message:
+            if "FOREIGN KEY constraint failed" in error_message:
                 raise ValueError("This user doesn't exist")
             elif "NOT NULL constraint failed: notifications.message" in error_message:
                 raise ValueError("Message was null")
