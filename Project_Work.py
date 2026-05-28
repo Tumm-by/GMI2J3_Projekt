@@ -759,132 +759,132 @@ class TaskManager: #!!*
 
 
 # Demo and testing
-def run_demo():
-    """Run demonstration of the task management system"""
-    manager = TaskManager(":memory:")
-    #manager = TaskManager("test_tasks.db")
+# def run_demo():
+#     """Run demonstration of the task management system"""
+#     manager = TaskManager(":memory:")
+#     #manager = TaskManager("test_tasks.db")
 
-    # Register users
-    print("=== User Registration ===")
-    user1_id = manager.register("john_doe", "john@example.com", "password123")
-    user2_id = manager.register("jane_smith", "jane@example.com", "password456")
-    print(f"Created user 1: {user1_id}")
-    print(f"Created user 2: {user2_id}")
+#     # Register users
+#     print("=== User Registration ===")
+#     user1_id = manager.register("john_doe", "john@example.com", "password123")
+#     user2_id = manager.register("jane_smith", "jane@example.com", "password456")
+#     print(f"Created user 1: {user1_id}")
+#     print(f"Created user 2: {user2_id}")
 
-    # Login
-    print("\n=== User Login ===")
-    manager.login("john_doe", "password123")
-    print(f"Logged in as: john_doe")
+#     # Login
+#     print("\n=== User Login ===")
+#     manager.login("john_doe", "password123")
+#     print(f"Logged in as: john_doe")
 
-    # Create projects
-    print("\n=== Project Creation ===")
-    project1_id = manager.project.create_project(user1_id, "Website Redesign", "Redesign company website")
-    project2_id = manager.project.create_project(user1_id, "Mobile App", "Build iOS and Android app")
-    print(f"Created project 1: {project1_id}")
-    print(f"Created project 2: {project2_id}")
+#     # Create projects
+#     print("\n=== Project Creation ===")
+#     project1_id = manager.project.create_project(user1_id, "Website Redesign", "Redesign company website")
+#     project2_id = manager.project.create_project(user1_id, "Mobile App", "Build iOS and Android app")
+#     print(f"Created project 1: {project1_id}")
+#     print(f"Created project 2: {project2_id}")
 
-    # Create tasks
-    print("\n=== Task Creation ===")
-    due_date1 = (datetime.now() + timedelta(days=7)).isoformat()
-    task1_id = manager.task.create_task(
-        project1_id, "Design mockups", "Create UI mockups for website",
-        priority="high", assigned_to=user1_id, due_date=due_date1
-    )
-    task2_id = manager.task.create_task(
-        project1_id, "Set up database", "Configure PostgreSQL database",
-        priority="high", assigned_to=user2_id, due_date=due_date1
-    )
-    task3_id = manager.task.create_task(
-        project2_id, "API design", "Design REST API endpoints",
-        priority="medium", assigned_to=user1_id
-    )
-    print(f"Created {task1_id}, {task2_id}, {task3_id}")
+#     # Create tasks
+#     print("\n=== Task Creation ===")
+#     due_date1 = (datetime.now() + timedelta(days=7)).isoformat()
+#     task1_id = manager.task.create_task(
+#         project1_id, "Design mockups", "Create UI mockups for website",
+#         priority="high", assigned_to=user1_id, due_date=due_date1
+#     )
+#     task2_id = manager.task.create_task(
+#         project1_id, "Set up database", "Configure PostgreSQL database",
+#         priority="high", assigned_to=user2_id, due_date=due_date1
+#     )
+#     task3_id = manager.task.create_task(
+#         project2_id, "API design", "Design REST API endpoints",
+#         priority="medium", assigned_to=user1_id
+#     )
+#     print(f"Created {task1_id}, {task2_id}, {task3_id}")
 
-    # Add subtasks
-    print("\n=== Subtask Creation ===")
-    sub1_id = manager.subtask.create_subtask(task1_id, "Create wireframes")
-    sub2_id = manager.subtask.create_subtask(task1_id, "Get stakeholder approval")
-    sub3_id = manager.subtask.create_subtask(task1_id, "Create final mockups")
-    print(f"Created subtasks: {sub1_id}, {sub2_id}, {sub3_id}")
+#     # Add subtasks
+#     print("\n=== Subtask Creation ===")
+#     sub1_id = manager.subtask.create_subtask(task1_id, "Create wireframes")
+#     sub2_id = manager.subtask.create_subtask(task1_id, "Get stakeholder approval")
+#     sub3_id = manager.subtask.create_subtask(task1_id, "Create final mockups")
+#     print(f"Created subtasks: {sub1_id}, {sub2_id}, {sub3_id}")
 
-    # Add comments
-    print("\n=== Adding Comments ===")
-    comment1_id = manager.comment.create_comment(task1_id, user1_id, "Starting on the mockups")
-    comment2_id = manager.comment.create_comment(task1_id, user2_id, "Looking good so far!")
-    print(f"Added comments: {comment1_id}, {comment2_id}")
+#     # Add comments
+#     print("\n=== Adding Comments ===")
+#     comment1_id = manager.comment.create_comment(task1_id, user1_id, "Starting on the mockups")
+#     comment2_id = manager.comment.create_comment(task1_id, user2_id, "Looking good so far!")
+#     print(f"Added comments: {comment1_id}, {comment2_id}")
 
-    # Log time
-    print("\n=== Time Logging ===")
-    log1_id = manager.time_log.log_time(task1_id, user1_id, 4.5, "Wireframe work")
-    log2_id = manager.time_log.log_time(task1_id, user2_id, 2.0, "Design review")
-    log3_id = manager.time_log.log_time(task2_id, user2_id, 3.5, "Initial setup")
-    print(f"Logged time: {log1_id}, {log2_id}, {log3_id}")
+#     # Log time
+#     print("\n=== Time Logging ===")
+#     log1_id = manager.time_log.log_time(task1_id, user1_id, 4.5, "Wireframe work")
+#     log2_id = manager.time_log.log_time(task1_id, user2_id, 2.0, "Design review")
+#     log3_id = manager.time_log.log_time(task2_id, user2_id, 3.5, "Initial setup")
+#     print(f"Logged time: {log1_id}, {log2_id}, {log3_id}")
 
-    # Update task status
-    print("\n=== Task Status Updates ===")
-    manager.task.update_task(task1_id, status="in_progress")
-    print("Updated task statuses")
+#     # Update task status
+#     print("\n=== Task Status Updates ===")
+#     manager.task.update_task(task1_id, status="in_progress")
+#     print("Updated task statuses")
 
-    # Get task details
-    print("\n=== Task Details ===")
-    task = manager.task.get_task(task1_id)
-    print(f"Task: {task['title']}")
-    print(f"Status: {task['status']}")
-    print(f"Priority: {task['priority']}")
+#     # Get task details
+#     print("\n=== Task Details ===")
+#     task = manager.task.get_task(task1_id)
+#     print(f"Task: {task['title']}")
+#     print(f"Status: {task['status']}")
+#     print(f"Priority: {task['priority']}")
 
-    # Get comments
-    print("\n=== Task Comments ===")
-    comments = manager.comment.list_task_comments(task1_id)
-    for comment in comments:
-        print(f"{comment['username']}: {comment['content']}")
+#     # Get comments
+#     print("\n=== Task Comments ===")
+#     comments = manager.comment.list_task_comments(task1_id)
+#     for comment in comments:
+#         print(f"{comment['username']}: {comment['content']}")
 
-    # Get project tasks
-    print("\n=== Project Tasks ===")
-    tasks = manager.task.list_project_tasks(project1_id)
-    for t in tasks:
-        print(f"- {t['title']} ({t['status']})")
+#     # Get project tasks
+#     print("\n=== Project Tasks ===")
+#     tasks = manager.task.list_project_tasks(project1_id)
+#     for t in tasks:
+#         print(f"- {t['title']} ({t['status']})")
 
-    # Project statistics
-    print("\n=== Project Statistics ===")
-    stats = manager.project.get_project_statistics(project1_id)
-    print(f"Total tasks: {stats['total_tasks']}")
-    print(f"Completed: {stats['completed_tasks']}")
-    print(f"In progress: {stats['in_progress_tasks']}")
-    print(f"Todo: {stats['todo_tasks']}")
-    print(f"Completion: {stats['completion_percentage']:.1f}%")
+#     # Project statistics
+#     print("\n=== Project Statistics ===")
+#     stats = manager.project.get_project_statistics(project1_id)
+#     print(f"Total tasks: {stats['total_tasks']}")
+#     print(f"Completed: {stats['completed_tasks']}")
+#     print(f"In progress: {stats['in_progress_tasks']}")
+#     print(f"Todo: {stats['todo_tasks']}")
+#     print(f"Completion: {stats['completion_percentage']:.1f}%")
 
-    # User productivity
-    print("\n=== User Productivity Stats ===")
-    user_stats = manager.analytics.get_user_productivity_stats(user1_id)
-    print(f"Total assigned: {user_stats['total_assigned']}")
-    print(f"Completed: {user_stats['completed']}")
-    print(f"Completion rate: {user_stats['completion_rate']:.1f}%")
-    print(f"Hours logged (30 days): {user_stats['hours_logged_30days']:.1f}")
+#     # User productivity
+#     print("\n=== User Productivity Stats ===")
+#     user_stats = manager.analytics.get_user_productivity_stats(user1_id)
+#     print(f"Total assigned: {user_stats['total_assigned']}")
+#     print(f"Completed: {user_stats['completed']}")
+#     print(f"Completion rate: {user_stats['completion_rate']:.1f}%")
+#     print(f"Hours logged (30 days): {user_stats['hours_logged_30days']:.1f}")
 
-    # Team productivity
-    print("\n=== Team Productivity ===")
-    team_stats = manager.analytics.get_team_productivity(project1_id)
-    for username, stats in team_stats.items():
-        print(f"{username}: {stats['completed_tasks']}/{stats['total_tasks']} tasks")
+#     # Team productivity
+#     print("\n=== Team Productivity ===")
+#     team_stats = manager.analytics.get_team_productivity(project1_id)
+#     for username, stats in team_stats.items():
+#         print(f"{username}: {stats['completed_tasks']}/{stats['total_tasks']} tasks")
 
-    # Create notifications
-    print("\n=== Notifications ===")
-    manager.notification.create_notification(user1_id, "Task assigned to you: Design mockups")
-    manager.notification.create_notification(user1_id, "Comment added to: Design mockups")
-    notifs = manager.notification.get_user_notifications(user1_id)
-    print(f"Unread notifications: {len([n for n in notifs if not n['read']])}")
+#     # Create notifications
+#     print("\n=== Notifications ===")
+#     manager.notification.create_notification(user1_id, "Task assigned to you: Design mockups")
+#     manager.notification.create_notification(user1_id, "Comment added to: Design mockups")
+#     notifs = manager.notification.get_user_notifications(user1_id)
+#     print(f"Unread notifications: {len([n for n in notifs if not n['read']])}")
 
-    # Audit logs
-    print("\n=== Audit Logs ===")
-    manager.audit_log.log_action(user1_id, "created_task", "task", task1_id)
-    manager.audit_log.log_action(user1_id, "updated_task", "task", task1_id, {"status": "in_progress"})
-    logs = manager.audit_log.get_user_actions(user1_id)
-    print(f"User actions logged: {len(logs)}")
+#     # Audit logs
+#     print("\n=== Audit Logs ===")
+#     manager.audit_log.log_action(user1_id, "created_task", "task", task1_id)
+#     manager.audit_log.log_action(user1_id, "updated_task", "task", task1_id, {"status": "in_progress"})
+#     logs = manager.audit_log.get_user_actions(user1_id)
+#     print(f"User actions logged: {len(logs)}")
 
-    # Cleanup
-    manager.close()
-    print("\n=== Demo Complete ===")
+#     # Cleanup
+#     manager.close()
+#     print("\n=== Demo Complete ===")
 
 
-if __name__ == "__main__":
-    run_demo()
+# if __name__ == "__main__":
+#     run_demo()
