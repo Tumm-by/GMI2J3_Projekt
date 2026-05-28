@@ -256,7 +256,6 @@ class Project:
             'completion_percentage': (row[1] or 0) / (row[0] or 1) * 100
         }
 
-
 class Task:
     """Task management"""
 
@@ -266,6 +265,14 @@ class Task:
     def create_task(self, project_id: str, title: str, description: str = "",
                    priority: str = "medium", assigned_to: str = None,
                    due_date: datetime = None) -> str:
+        # Validate title
+        if not title or not title.strip():
+            raise ValueError("Title cannot be empty")
+        # Validate priority
+        valid_priorities = ["low", "medium", "high"]
+        if priority not in valid_priorities:
+            raise ValueError(f"Priority must be one of {valid_priorities}")
+
         task_id = str(uuid.uuid4())
 
         self.db.cursor.execute("""
@@ -299,9 +306,9 @@ class Task:
     def update_task(self, task_id: str, **kwargs) -> bool:
         allowed_fields = ['title', 'description', 'priority', 'status', 'assigned_to', 'due_date']
         updates = {k: v for k, v in kwargs.items() if k in allowed_fields}
-
+        # Validate that there are fields to update
         if not updates:
-            return False
+            raise ValueError("No valid fields to update")
 
         set_clause = ", ".join([f"{k} = ?" for k in updates.keys()])
         values = list(updates.values()) + [task_id]
@@ -316,7 +323,10 @@ class Task:
     def delete_task(self, task_id: str) -> bool:
         self.db.cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
         self.db.conn.commit()
-        return self.db.cursor.rowcount > 0
+        # Validate that task existed
+        if self.db.cursor.rowcount == 0:
+            raise ValueError("ID not found")
+        return True
 
     def get_overdue_tasks(self, project_id: str) -> List[Dict]:
         self.db.cursor.execute("""
@@ -341,6 +351,9 @@ class SubTask:
         self.db = db
 
     def create_subtask(self, task_id: str, title: str) -> str:
+       # Validate title
+        if not title or not title.strip():
+            raise ValueError("Title cannot be empty")
         subtask_id = str(uuid.uuid4())
 
         self.db.cursor.execute("""
@@ -367,7 +380,10 @@ class SubTask:
     def delete_subtask(self, subtask_id: str) -> bool:
         self.db.cursor.execute("DELETE FROM subtasks WHERE id = ?", (subtask_id,))
         self.db.conn.commit()
-        return self.db.cursor.rowcount > 0
+        # Validate that task existed
+        if self.db.cursor.rowcount == 0:
+            raise ValueError("Task ID not found")
+        return True
 
     def get_subtask_completion_percentage(self, task_id: str) -> float:
         self.db.cursor.execute("""
