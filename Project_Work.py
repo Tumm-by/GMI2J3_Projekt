@@ -4,10 +4,15 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Tuple
 import hashlib
 import uuid
-from abc import ABC, abstractmethod
-import statistics
 
 # Task Management Application - Full-featured system for managing projects and tasks
+
+class EmailUnavailableError(Exception):
+    """Raised when an email address is not available for use"""
+    pass
+class UserNameUnavailableError(Exception):
+    """Raised when an email address is not available for use"""
+    pass
 
 class Database:
     """Database management for tasks and projects"""
@@ -735,21 +740,16 @@ class TaskManager: #!!*
         try:
             return self._user.create_user(username, email, password)
         except ValueError as ex:
-            message = str.lower(ex)
+            message = str.lower(str(ex))
             if "username" in message:
-                raise self.UserNameUnavailableError(f"username: {username} is unavailable")
+                raise UserNameUnavailableError(f"username: {username} is unavailable")
             elif "email" in message:
-                raise self.EmailUnavailableError(f"email: {email} is unavailable")
+                raise EmailUnavailableError(f"email: {email} is unavailable")
 
     def close(self):
         self.db.close()
 
-    class EmailUnavailableError(Exception):
-        """Raised when an email address is not available for use"""
-        pass
-    class UserNameUnavailableError(Exception):
-        """Raised when an email address is not available for use"""
-        pass
+
 
 
 # Demo and testing

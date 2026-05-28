@@ -266,4 +266,58 @@ class Test_Taskmanager(unittest.TestCase):
         self.assertFalse(test_manager.logged_in(), "User Not found")
 
     def test_register_success(self):
-        test_manager = Project_Work
+        #Arrange
+        test_manager = self.create_task_manager(False, False)
+
+        #Act
+        test_user_id = test_manager.register(self.TEST_USERNAME, self.TEST_USER_EMAIL, self.TEST_USER_PASSWORD)
+
+        #Validate
+        test_manager.login(self.TEST_USERNAME, self.TEST_USER_PASSWORD)
+        test_user = test_manager.user.get_user(test_user_id)
+        self.assertEqual(test_user['id'], test_user_id)
+        self.assertEqual(test_user['username'], self.TEST_USERNAME)
+        self.assertEqual(test_user['email'], self.TEST_USER_EMAIL)
+        self.assertEqual(test_user['password_hash'], Project_Work.User.hash_password(self.TEST_USER_PASSWORD))
+
+    def test_register_username_unavailable(self):
+        #Arrange
+        test_manager = self.create_task_manager(True, True)
+
+        #Act & Validate
+        try:
+            with patch("Project_Work.User.create_user", side_effect=ValueError(f"USERNAME: {self.TEST_USERNAME} is unavailable")):
+                test_user_id = test_manager.register(self.TEST_USERNAME, self.TEST_USER_EMAIL + '3', self.TEST_USER_PASSWORD)
+            self.fail("Successfull registration despite duplicate username")
+        except Project_Work.UserNameUnavailableError:
+            self.assertTrue(True, "Correct Exception")
+        except Exception:
+            self.fail("Wrong Exception")
+
+    def test_register_email_unavailable(self):
+        #Arrange
+        test_manager = self.create_task_manager(True, True)
+
+        #Act & Validate
+        try:
+            with patch("Project_Work.User.create_user", side_effect=ValueError(f"EMAIL: {self.TEST_USER_EMAIL} is unavailable")):
+                test_user_id = test_manager.register(self.TEST_USERNAME, self.TEST_USER_EMAIL + '3', self.TEST_USER_PASSWORD)
+            self.fail("Successfull registration despite duplicate username")
+        except Project_Work.EmailUnavailableError:
+            self.assertTrue(True, "Correct Exception")
+        except Exception:
+            self.fail("Wrong Exception")
+
+    def test_close(self):
+        #Arrange
+        test_manager = self.create_task_manager(True, True)
+
+        #Act
+        test_manager.close()
+
+        #Validate
+        try:
+            test_manager.db.conn.execute("SELECT 1")
+            self.fail("Succeeded in using connection that is supposed to be closed")
+        except Exception:
+            self.assertTrue(True, "Successfully closed")

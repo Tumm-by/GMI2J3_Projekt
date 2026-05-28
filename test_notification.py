@@ -107,8 +107,6 @@ class Test_Notification(unittest.TestCase):
         test_notifications = Project_Work.Notification(test_db)
         test_user_id = test_user.create_user(self.TEST_USERNAME, self.TEST_USER_EMAIL, self.TEST_USER_PASSWORD)
 
-        with self.assertRaisesRegex(ValueError, "Message of length 0"):
-            test_notifications.create_notification(str(test_user_id), "")
         try:
             test_notifications.create_notification(str(test_user_id), "")
             self.fail("Creation of notification succeeded when it should fail")
