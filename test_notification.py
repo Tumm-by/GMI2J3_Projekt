@@ -11,11 +11,11 @@ class Test_Notification(unittest.TestCase):
     TEST_USER_EMAIL = "testUserMail@example.com"
     TEST_USER_PASSWORD = "pass1234"
     TEST_MESSAGE_VALID = "This is a test message"
-    
+
     def test__init__(self):
         #Arrange
         test_db = Project_Work.Database(":memory:")
-        
+
         #Act & Validate
         try:
             test_db.conn.execute("SELECT 1")
@@ -23,8 +23,8 @@ class Test_Notification(unittest.TestCase):
             return
         except Exception as ex:
             self.fail(f"Notification init failed: {ex}")
-    
-    def test_type_error_no_db__init__(self):     
+
+    def test_type_error_no_db__init__(self):
         #Arrange, Act & Validate
         try:
             notification = Project_Work.Notification("bad_arg")
@@ -36,7 +36,7 @@ class Test_Notification(unittest.TestCase):
         except Exception as ex: #Validate
             self.fail(f"Notification init, wrong exception: {ex}")
             return
-        
+
     def test_create_notification(self):
         #Arrange
         test_user_id = uuid.UUID("11111111-1111-4111-8111-111111111111")
@@ -81,7 +81,7 @@ class Test_Notification(unittest.TestCase):
 
     def test_create_notification_null_message(self):
         #Arrange
-        test_db = Project_Work.Database(":memory:") 
+        test_db = Project_Work.Database(":memory:")
         test_user = Project_Work.User(test_db)
         test_notications = Project_Work.Notification(test_db)
         test_user_id = test_user.create_user(self.TEST_USERNAME, self.TEST_USER_EMAIL, self.TEST_USER_PASSWORD)
@@ -124,7 +124,7 @@ class Test_Notification(unittest.TestCase):
         except Exception:
             self.fail("Wrong Exception triggered")"""
 
-    
+
     def test_get_user_notifications_all(self):
         #Arrange
         test_user_id = uuid.UUID("11111111-1111-4111-8111-111111111111")
@@ -139,7 +139,7 @@ class Test_Notification(unittest.TestCase):
 
         #Act
         notification_results = test_notications.get_user_notifications(str(test_user_id))[0]
-        
+
         #Validate
         self.assertEqual(notification_results['id'], str(test_notification_id))
 
@@ -164,7 +164,7 @@ class Test_Notification(unittest.TestCase):
         #Validate
         self.assertEqual(len(notification_results), 1)
         self.assertEqual(notification_results[0]['id'], str(test_notification_unread_id))
-    
+
     def test_mark_as_read(self):
         #Arrange
         test_user_id = uuid.UUID("11111111-1111-4111-8111-111111111111")
@@ -176,7 +176,7 @@ class Test_Notification(unittest.TestCase):
         test_notications = Project_Work.Notification(test_db)
         with patch("Project_Work.uuid.uuid4", return_value=test_notification_read_id):
             test_notications.create_notification(str(test_user_id), self.TEST_MESSAGE_VALID)
-        
+
         #Act
         test_notications.mark_as_read(str(test_notification_read_id))
 

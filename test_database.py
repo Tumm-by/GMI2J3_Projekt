@@ -16,7 +16,7 @@ EXPECTED_SQL = """
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
-            
+
             CREATE TABLE IF NOT EXISTS projects (
                 id TEXT PRIMARY KEY,
                 user_id TEXT NOT NULL,
@@ -27,7 +27,7 @@ EXPECTED_SQL = """
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
-            
+
             CREATE TABLE IF NOT EXISTS tasks (
                 id TEXT PRIMARY KEY,
                 project_id TEXT NOT NULL,
@@ -42,7 +42,7 @@ EXPECTED_SQL = """
                 FOREIGN KEY (project_id) REFERENCES projects(id),
                 FOREIGN KEY (assigned_to) REFERENCES users(id)
             );
-            
+
             CREATE TABLE IF NOT EXISTS subtasks (
                 id TEXT PRIMARY KEY,
                 task_id TEXT NOT NULL,
@@ -51,7 +51,7 @@ EXPECTED_SQL = """
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (task_id) REFERENCES tasks(id)
             );
-            
+
             CREATE TABLE IF NOT EXISTS comments (
                 id TEXT PRIMARY KEY,
                 task_id TEXT NOT NULL,
@@ -61,7 +61,7 @@ EXPECTED_SQL = """
                 FOREIGN KEY (task_id) REFERENCES tasks(id),
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
-            
+
             CREATE TABLE IF NOT EXISTS time_logs (
                 id TEXT PRIMARY KEY,
                 task_id TEXT NOT NULL,
@@ -72,7 +72,7 @@ EXPECTED_SQL = """
                 FOREIGN KEY (task_id) REFERENCES tasks(id),
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
-            
+
             CREATE TABLE IF NOT EXISTS notifications (
                 id TEXT PRIMARY KEY,
                 user_id TEXT NOT NULL,
@@ -81,7 +81,7 @@ EXPECTED_SQL = """
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
-            
+
             CREATE TABLE IF NOT EXISTS audit_logs (
                 id TEXT PRIMARY KEY,
                 user_id TEXT NOT NULL,
@@ -102,7 +102,7 @@ def extract_schema(conn):#Från co-pilot
         columns = conn.execute(f"PRAGMA table_info({table})").fetchall()
         fks = conn.execute(f"PRAGMA foreign_key_list({table})").fetchall()
         indexes = conn.execute(f"PRAGMA index_list({table})").fetchall()
-    
+
         schema[table] = {
             "columns": [(c[1], c[2], c[3], c[4], c[5]) for c in columns],
             "foreign_keys": [(fk[3], fk[2], fk[4]) for fk in fks],
@@ -120,7 +120,7 @@ class Test_Database(unittest.TestCase):
         actual_conn = Project_Work.Database(":memory:").conn
         expected_schema = extract_schema(expected_conn)
         actual_schema = extract_schema(actual_conn)
-        
+
         #Act & Validate. Compare to expected SQL
         self.assertDictEqual(expected_schema, actual_schema)
 
@@ -131,7 +131,7 @@ class Test_Database(unittest.TestCase):
             self.assertTrue(True, "Correct error thrown")
             return
         self.fail("Expected Error not thrown")
-        
+
     def test_connect(self):
         #Arrange
         test_db = Project_Work.Database(":memory:")

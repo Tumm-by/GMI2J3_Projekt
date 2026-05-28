@@ -15,11 +15,11 @@ class Test_Taskmanager(unittest.TestCase):
     def create_task_manager(self, register: bool, login: bool) -> Project_Work.TaskManager:
         test_manager = Project_Work.TaskManager(":memory:")
         if register:
-            test_manager.register(self.TEST_USERNAME, self.TEST_USER_EMAIL, self.TEST_USER_PASSWORD)  
+            test_manager.register(self.TEST_USERNAME, self.TEST_USER_EMAIL, self.TEST_USER_PASSWORD)
         if login:
             test_manager.login(self.TEST_USERNAME, self.TEST_USER_PASSWORD)
         return test_manager
-    
+
     ######################
     #Happy path properties
     def test_get_db_sucess(self):
@@ -32,7 +32,7 @@ class Test_Taskmanager(unittest.TestCase):
             self.assertTrue(True, "Successfully retrieved property")
         except:
             self.fail("Failed to retrieve property")
-        
+
     def test_get_user_sucess(self):
         #Arrange
         test_manager = self.create_task_manager(True, True)
@@ -131,7 +131,7 @@ class Test_Taskmanager(unittest.TestCase):
             self.assertTrue(True, "Successfully retrieved property")
         except:
             self.fail("Failed to retrieve property")
-    
+
     def test_get_current_user_sucess(self):
         #Arrange
         test_manager = self.create_task_manager(True, True)
@@ -142,7 +142,7 @@ class Test_Taskmanager(unittest.TestCase):
             self.assertTrue(True, "Successfully retrieved property")
         except:
             self.fail("Failed to retrieve property")
-    
+
     #########################
     # Unhappy path properties
     def test_get_db_failure(self):
@@ -240,7 +240,7 @@ class Test_Taskmanager(unittest.TestCase):
     def test_logged_in(self):
         test_manager = self.create_task_manager(True, True)
         self.assertTrue(test_manager.logged_in(), "Is Logged in")
-    
+
     def test_not_logged_in(self):
         test_manager = self.create_task_manager(False, False)
         self.assertFalse(test_manager.logged_in(), "Is Logged out")
@@ -249,21 +249,21 @@ class Test_Taskmanager(unittest.TestCase):
         test_manager = self.create_task_manager(True, True)
         test_manager.logout()
         self.assertFalse(test_manager.logged_in(), "Sucessfully logged out")
-    
+
     def test_login_success(self):
         test_manager = self.create_task_manager(True, False)#Arrange
         test_manager.login(self.TEST_USERNAME, self.TEST_USER_PASSWORD)#Act
         self.assertTrue(test_manager.logged_in(), "Successfully Logged in")#Validate
-    
+
     def test_login_failure_password(self):
         test_manager = self.create_task_manager(True, False)
         test_manager.login(self.TEST_USERNAME, self.TEST_USER_WRONG_PASSWORD)
         self.assertFalse(test_manager.logged_in(), "Failed to login, wrong password")
-    
+
     def test_login_failure_user_not_found(self):
         test_manager = self.create_task_manager(True, False)
         test_manager.login(self.TEST_USERNAME_MISSING, self.TEST_USER_WRONG_PASSWORD)
         self.assertFalse(test_manager.logged_in(), "User Not found")
-    
+
     def test_register_success(self):
         test_manager = Project_Work
