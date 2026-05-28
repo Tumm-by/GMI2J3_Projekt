@@ -235,6 +235,8 @@ class Project:
             WHERE id = ?
         """, values)
         self.db.conn.commit()
+        if self.db.cursor.rowcount == 0:
+            return False
         return True
 
     def delete_project(self, project_id: str) -> bool:
