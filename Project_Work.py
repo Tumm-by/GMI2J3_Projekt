@@ -768,6 +768,7 @@ class TaskManager: #!!*
         self.db.close()
 #Plop2
 #plop3
+#plop4
 
 
 # Demo and testing
