@@ -15,11 +15,3 @@ steps:
 - script: |
     echo "Cloning GitHub repo..."
     git clone --depth 1 https://github.com/Tumm-by/GMI2J3_Projekt.git
-    cd GMI2J3_Projekt
-
-    echo "Listing files pulled from GitHub:"
-    ls -la
-
-    echo "Running Python script:"
-    python3 yourfile.py
-  displayName: "Pull + Run Python"
