@@ -130,9 +130,11 @@ class Test_Database(unittest.TestCase):
         except ValueError as ex:
             message = str(ex)
             if "length 0" in message:
-                self.asserTrue(True, "Correct Exception")
+                self.assertTrue(True, "Correct Exception")
+                return
             else:
                 self.fail("Wrong Exception")
+                return
         self.fail("No Exception thrown")
 
     def test_bad_db_name_value_error(self):
