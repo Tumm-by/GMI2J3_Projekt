@@ -13,5 +13,5 @@ steps:
     git clone https://Tumm-by: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@github.com/Tumm-by/GMI2J3_Projekt.git source
     cd source
 
-    git remote add azure https://h11danhc@du.se:FYsuLZolG3WKVP4jHxvS2k7P6UmXXRzfyTCFPw5W6DQs6RdJ13CWJQQJ99CEACAAAAAN80kHAAASAZDO2DOd@dev.azure.com/h11danhc0910/GMI2J3_G7_Project/_git/GMI2J3_Projekt.git
+    git remote add azure https://h11danhc%40du.se:FYsuLZolG3WKVP4jHxvS2k7P6UmXXRzfyTCFPw5W6DQs6RdJ13CWJQQJ99CEACAAAAAN80kHAAASAZDO2DOd@dev.azure.com/h11danhc0910/GMI2J3_G7_Project/_git/GMI2J3_Projekt.git
     git push azure --mirror
