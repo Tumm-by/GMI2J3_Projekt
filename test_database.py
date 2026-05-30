@@ -124,6 +124,17 @@ class Test_Database(unittest.TestCase):
         #Act & Validate. Compare to expected SQL
         self.assertDictEqual(expected_schema, actual_schema)
 
+    def test_db_name_length_0(self):
+        try:
+            conn = Project_Work.Database("")
+        except ValueError as ex:
+            message = str(ex)
+            if "length 0" in message:
+                self.asserTrue(True, "Correct Exception")
+            else:
+                self.fail("Wrong Exception")
+        self.fail("No Exception thrown")
+
     def test_bad_db_name_value_error(self):
         try:
             actual_conn = Project_Work.Database(":memory").conn

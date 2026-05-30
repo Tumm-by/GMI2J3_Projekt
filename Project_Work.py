@@ -18,6 +18,8 @@ class Database:
     """Database management for tasks and projects"""
 
     def __init__(self, db_name: str = "tasks.db"):
+        if len(db_name) <= 0:
+            raise ValueError("Database name of length 0")
         self.db_name = db_name
         self.connect()
         self.init_db()
