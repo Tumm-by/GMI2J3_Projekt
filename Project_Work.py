@@ -766,10 +766,6 @@ class TaskManager: #!!*
 
     def close(self):
         self.db.close()
-#Plop2
-#plop3
-#plop4
-
 
 # Demo and testing
 # def run_demo():
