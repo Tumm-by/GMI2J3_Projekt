@@ -766,7 +766,7 @@ class TaskManager: #!!*
 
     def close(self):
         self.db.close()
-
+#Plop2
 
 
 
