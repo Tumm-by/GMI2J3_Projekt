@@ -564,15 +564,27 @@ class AuditLog:
         self.db = db
 
     def log_action(self, user_id: str, action: str, entity_type: str = None,
-                   entity_id: str = None, changes: Dict = None) -> str:
+                entity_id: str = None, changes: Dict = None) -> str:
         log_id = str(uuid.uuid4())
         changes_json = json.dumps(changes) if changes else None
 
-        self.db.cursor.execute("""
-            INSERT INTO audit_logs (id, user_id, action, entity_type, entity_id, changes)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (log_id, user_id, action, entity_type, entity_id, changes_json))
-        self.db.conn.commit()
+        try:
+            self.db.cursor.execute("""
+                INSERT INTO audit_logs (id, user_id, action, entity_type, entity_id, changes)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (log_id, user_id, action, entity_type, entity_id, changes_json))
+            self.db.conn.commit()
+
+        except sqlite3.IntegrityError as ex:
+            error_message = str(ex)
+
+            if "FOREIGN KEY constraint failed" in error_message:
+                raise ValueError("This user doesn't exist")
+            elif "NOT NULL constraint failed: audit_logs.action" in error_message:
+                raise ValueError("Action cannot be null")
+            else:
+                raise ValueError("Invalid audit log data")
+
         return log_id
 
     def get_user_actions(self, user_id: str, limit: int = 100) -> List[Dict]:
