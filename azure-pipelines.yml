@@ -14,4 +14,4 @@ steps:
 
 - script: |
     echo "Cloning GitHub repo..."
-    git clone --depth 1 https://github.com/Tumm-by/GMI2J3_Projekt.git
+    git clone --depth 1 https://$(Tumm-by):$(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)@github.com/Tumm-by/GMI2J3_Projekt.git
