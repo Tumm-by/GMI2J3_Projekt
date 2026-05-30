@@ -4,14 +4,14 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
-
-pool:
-  vmImage: ubuntu-latest
+  branches:
+    include:
+      - main
 
 steps:
-- checkout: none
-
 - script: |
-    echo "Cloning GitHub repo..."
-    git clone --depth 1 https://$(Tumm-by):$(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)@github.com/Tumm-by/GMI2J3_Projekt.git
+    git clone https://$(Tumm-by):$(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)@github.com/Tumm-by/GMI2J3_Projekt.git source
+    cd source
+
+    git remote add azure https://$(pcn2WFpK41VV4CrdcUF9SNfkpU7ilEIZ1lfCavpOSIToF5S3dq78JQQJ99CEACAAAAAN80kHAAASAZDO2whH)@https://dev.azure.com/h11danhc0910/GMI2J3_G7_Project/_git/GMI2J3_Projekt
+    git push azure --mirror
