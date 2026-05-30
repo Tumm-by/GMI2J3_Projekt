@@ -10,10 +10,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- checkout: none
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    echo "Cloning GitHub repo..."
+    git clone --depth 1 https://github.com/Tumm-by/GMI2J3_Projekt.git
+    cd GMI2J3_Projekt
+
+    echo "Listing files pulled from GitHub:"
+    ls -la
+
+    echo "Running Python script:"
+    python3 yourfile.py
+  displayName: "Pull + Run Python"
