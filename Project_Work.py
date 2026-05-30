@@ -141,11 +141,21 @@ class User:
         user_id = str(uuid.uuid4())
         password_hash = self.hash_password(password)
 
-        self.db.cursor.execute("""
-            INSERT INTO users (id, username, email, password_hash)
-            VALUES (?, ?, ?, ?)
-        """, (user_id, username, email, password_hash))
-        self.db.conn.commit()
+        try:
+            self.db.cursor.execute("""
+                INSERT INTO users (id, username, email, password_hash)
+                VALUES (?, ?, ?, ?)
+            """, (user_id, username, email, password_hash))
+            self.db.conn.commit()
+        except sqlite3.IntegrityError as e:
+            error_message = str(e).lower()
+            if "username" in error_message:
+                raise ValueError(f"username '{username}' is already taken") from e
+            elif "email" in error_message:
+                raise ValueError(f"email '{email}' is already registered") from e
+            else:
+                raise ValueError(f"Could not create user due to integrity constraint: {e}") from e
+
         return user_id
 
     def authenticate(self, username: str, password: str) -> Optional[str]:
@@ -171,11 +181,20 @@ class User:
         set_clause = ", ".join([f"{k} = ?" for k in updates.keys()])
         values = list(updates.values()) + [user_id]
 
-        self.db.cursor.execute(f"""
-            UPDATE users SET {set_clause}, updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
-        """, values)
-        self.db.conn.commit()
+        try:
+            self.db.cursor.execute(f"""
+                UPDATE users SET {set_clause}, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            """, values)
+            self.db.conn.commit()
+        except sqlite3.IntegrityError as e:
+            error_message = str(e).lower()
+            if "username" in error_message:
+                raise ValueError(f"username '{kwargs.get('username')}' is already taken") from e
+            elif "email" in error_message:
+                raise ValueError(f"email '{kwargs.get('email')}' is already registered") from e
+            else:
+                raise ValueError(f"Could not update user: {e}") from e
         return True
 
     def list_users(self, limit: int = 50, offset: int = 0) -> List[Dict]:
