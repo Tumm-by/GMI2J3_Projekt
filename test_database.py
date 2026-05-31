@@ -125,8 +125,10 @@ class Test_Database(unittest.TestCase):
         self.assertDictEqual(expected_schema, actual_schema)
 
     def test_db_name_length_0(self):
+        #Arrange & Act
         try:
             conn = Project_Work.Database("")
+        #Validate
         except ValueError as ex:
             message = str(ex)
             if "length 0" in message:
@@ -137,7 +139,7 @@ class Test_Database(unittest.TestCase):
                 return
         self.fail("No Exception thrown")
 
-    def test_bad_db_name_value_error(self):
+    def test_db_invalid_path_value_error(self):
         try:
             actual_conn = Project_Work.Database(":memory").conn
         except ValueError:
