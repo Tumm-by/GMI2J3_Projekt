@@ -8,6 +8,9 @@ trigger:
     include:
       - main
 
+variables:
+- group: TokensForSyncing
+
 steps:
 - script: |
     git clone https://$(GithubUserName):$(GithubToken)@github.com/Tumm-by/GMI2J3_Projekt.git source
