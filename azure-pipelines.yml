@@ -13,8 +13,8 @@ variables:
 
 steps:
 - script: |
-    git clone https://$(GithubUserName):$(GithubToken)@github.com/Tumm-by/GMI2J3_Projekt.git source
+    git clone https://$(GithubUserName):$(GithubToken)@$(GithubPath) source
     cd source
 
-    git remote add azure https://$(AzureUserName):$(AzureToken)@dev.azure.com/h11danhc0910/GMI2J3_G7_Project/_git/GMI2J3_Projekt.git
+    git remote add azure https://$(AzureUserName):$(AzureToken)@$(AzurePath)
     git push azure --mirror
