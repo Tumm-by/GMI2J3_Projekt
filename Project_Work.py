@@ -18,6 +18,8 @@ class Database:
     """Database management for tasks and projects"""
 
     def __init__(self, db_name: str = "tasks.db"):
+        if len(db_name) <= 0:
+            raise ValueError("Database name of length 0")
         self.db_name = db_name
         self.connect()
         self.init_db()
@@ -27,7 +29,7 @@ class Database:
             self.conn = sqlite3.connect(self.db_name)
             self.conn.execute("PRAGMA foreign_keys = ON;")
         except sqlite3.OperationalError:
-            raise ValueError(f"Could not open/create database '{self.db_name}'")
+            raise ValueError(f"Could not open/create database.'{self.db_name}'.Path/Directory is invalid or doesn't exist")
         self.conn.row_factory = sqlite3.Row
         self.cursor = self.conn.cursor()
 
@@ -125,7 +127,6 @@ class Database:
 
     def close(self):
         self.conn.close()
-
 
 class User:
     """User management"""
@@ -502,7 +503,7 @@ class TimeLog:
         return self.db.cursor.rowcount > 0
 
 
-class Notification: #!!*
+class Notification:
     """Notification management"""
 
     def __init__(self, db: Database):

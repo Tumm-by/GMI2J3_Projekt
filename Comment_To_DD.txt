@@ -1,3 +1,0 @@
-DH
-    create_user:
-            Behöver, exceptions för create_user's Sqlite.IntegrityError Min rekommendation. Någon typ av value error som beskriver felet.
