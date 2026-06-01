@@ -133,13 +133,15 @@ class TestAuditLogSA(unittest.TestCase):
         self.assertEqual(history, [])
 
     def test_log_action_invalid_user(self):
-        """Rule 7: User does not exist -> Raise IntegrityError"""
+        """Rule 7: User does not exist -> Raise ValueError"""
         # Act + Validate
-        with self.assertRaises(sqlite3.IntegrityError):
+        with self.assertRaises(ValueError) as context:
             self.audit_manager.log_action(
                 "fake_user_id",
                 "created_task"
             )
+
+        self.assertEqual(str(context.exception), "This user doesn't exist")
 
 
 if __name__ == "__main__":
