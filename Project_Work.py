@@ -18,6 +18,8 @@ class Database:
     """Database management for tasks and projects"""
 
     def __init__(self, db_name: str = "tasks.db"):
+        if len(db_name) <= 0:
+            raise ValueError("Database name of length 0")
         self.db_name = db_name
         self.connect()
         self.init_db()
@@ -27,7 +29,7 @@ class Database:
             self.conn = sqlite3.connect(self.db_name)
             self.conn.execute("PRAGMA foreign_keys = ON;")
         except sqlite3.OperationalError:
-            raise ValueError(f"Could not open/create database '{self.db_name}'")
+            raise ValueError(f"Could not open/create database.'{self.db_name}'.Path/Directory is invalid or doesn't exist")
         self.conn.row_factory = sqlite3.Row
         self.cursor = self.conn.cursor()
 
@@ -125,7 +127,6 @@ class Database:
 
     def close(self):
         self.conn.close()
-
 
 class User:
     """User management"""
@@ -502,7 +503,7 @@ class TimeLog:
         return self.db.cursor.rowcount > 0
 
 
-class Notification: #!!*
+class Notification:
     """Notification management"""
 
     def __init__(self, db: Database):
@@ -564,15 +565,27 @@ class AuditLog:
         self.db = db
 
     def log_action(self, user_id: str, action: str, entity_type: str = None,
-                   entity_id: str = None, changes: Dict = None) -> str:
+                entity_id: str = None, changes: Dict = None) -> str:
         log_id = str(uuid.uuid4())
         changes_json = json.dumps(changes) if changes else None
 
-        self.db.cursor.execute("""
-            INSERT INTO audit_logs (id, user_id, action, entity_type, entity_id, changes)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (log_id, user_id, action, entity_type, entity_id, changes_json))
-        self.db.conn.commit()
+        try:
+            self.db.cursor.execute("""
+                INSERT INTO audit_logs (id, user_id, action, entity_type, entity_id, changes)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (log_id, user_id, action, entity_type, entity_id, changes_json))
+            self.db.conn.commit()
+
+        except sqlite3.IntegrityError as ex:
+            error_message = str(ex)
+
+            if "FOREIGN KEY constraint failed" in error_message:
+                raise ValueError("This user doesn't exist")
+            elif "NOT NULL constraint failed: audit_logs.action" in error_message:
+                raise ValueError("Action cannot be null")
+            else:
+                raise ValueError("Invalid audit log data")
+
         return log_id
 
     def get_user_actions(self, user_id: str, limit: int = 100) -> List[Dict]:
@@ -766,9 +779,6 @@ class TaskManager: #!!*
 
     def close(self):
         self.db.close()
-
-
-
 
 # Demo and testing
 # def run_demo():

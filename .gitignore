@@ -184,3 +184,5 @@ cython_debug/
 !*.py
 !*.txt
 !.coveragerc
+!*.yaml
+!*.yml

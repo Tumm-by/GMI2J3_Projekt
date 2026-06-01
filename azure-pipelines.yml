@@ -1,0 +1,20 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+- group: TokensForSyncing
+
+steps:
+- script: |
+    git clone https://$(GithubUserName):$(GithubToken)@$(GithubPath) source
+    cd source
+
+    git remote add azure https://$(AzureUserName):$(AzureToken)@$(AzurePath)
+    git push azure --mirror

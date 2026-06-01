@@ -31,7 +31,7 @@ class Test_User(unittest.TestCase):
         self.user_manager.create_user("duplicate_user", "duplicate@test.com", "pass123")
 
         # Attempt to create a new user with identical unique identifiers
-        with self.assertRaises(sqlite3.IntegrityError):
+        with self.assertRaises(ValueError):
             self.user_manager.create_user("duplicate_user", "duplicate@test.com", "newpass456")
 
     def test_authenticate_success(self):
@@ -60,13 +60,13 @@ class Test_User(unittest.TestCase):
     def test_create_user_duplicate_username(self):
         """Rule 2: Username duplicate, Email unique -> Raise IntegrityError"""
         self.user_manager.create_user("existinguser", "first@test.com", "pass")
-        with self.assertRaises(sqlite3.IntegrityError):
+        with self.assertRaises(ValueError):
             self.user_manager.create_user("existinguser", "second@test.com", "pass")
 
     def test_create_user_duplicate_email(self):
         """Rule 3: Username unique, Email duplicate -> Raise IntegrityError"""
         self.user_manager.create_user("user_one", "shared@test.com", "pass")
-        with self.assertRaises(sqlite3.IntegrityError):
+        with self.assertRaises(ValueError):
             self.user_manager.create_user("user_two", "shared@test.com", "pass")
 
     def test_update_user_success(self):
@@ -90,7 +90,7 @@ class Test_User(unittest.TestCase):
         self.user_manager.create_user("user1", "user1@test.com", "pass")
         user2_id = self.user_manager.create_user("user2", "user2@test.com", "pass")
 
-        with self.assertRaises(sqlite3.IntegrityError):
+        with self.assertRaises(ValueError):
             self.user_manager.update_user(user2_id, email="user1@test.com")
 
 if __name__ == '__main__':
