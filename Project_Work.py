@@ -181,7 +181,7 @@ class User:
 
         set_clause = ", ".join([f"{k} = ?" for k in updates.keys()])
         values = list(updates.values()) + [user_id]
-#a
+
         try:
             self.db.cursor.execute(f"""
                 UPDATE users SET {set_clause}, updated_at = CURRENT_TIMESTAMP
