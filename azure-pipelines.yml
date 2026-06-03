@@ -6,7 +6,7 @@
 trigger:
   branches:
     include:
-      - main
+      - feature/console-ui
 
 variables:
 - group: TokensForSyncing
