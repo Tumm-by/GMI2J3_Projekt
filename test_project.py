@@ -73,6 +73,11 @@ class Test_Project(unittest.TestCase):
         result = self.project_manager.update_project(fake_id, name="Ignored")
         self.assertFalse(result)
 
+    def test_update_project_nonexistent_update_type(self):
+        fake_id = str(uuid.uuid4())
+        result = self.project_manager.update_project(fake_id, nonexistent="nonexistent_type")
+        self.assertFalse(result)
+
     def test_delete_project_success(self):
         pid = self.project_manager.create_project(self.user_id, "To Delete")
         result = self.project_manager.delete_project(pid)
