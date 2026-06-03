@@ -143,6 +143,16 @@ class TestAuditLogSA(unittest.TestCase):
 
         self.assertEqual(str(context.exception), "This user doesn't exist")
 
+    def test_log_action_null_action(self):
+        """Rule 8: action is null -> Raise ValueError"""
+        # Act + Validate
+        with self.assertRaises(ValueError) as context:
+            self.audit_manager.log_action(
+                self.user_id,
+                None
+            )
+
+        self.assertEqual(str(context.exception), "Action cannot be null")
 
 if __name__ == "__main__":
     unittest.main()
