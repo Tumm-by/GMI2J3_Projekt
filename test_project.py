@@ -4,7 +4,8 @@ import uuid
 
 import Project_Work
 
-class Test_Project(unittest.TestCase):
+
+class TestProject(unittest.TestCase):
     def setUp(self):
         self.db = Project_Work.Database(":memory:")
         self.user_manager = Project_Work.User(self.db)
@@ -60,6 +61,34 @@ class Test_Project(unittest.TestCase):
         projects = self.project_manager.list_user_projects(new_user_id)
         self.assertEqual(projects, [])
 
+    def test_list_user_projects_with_status_filter(self):
+        """Test list_user_projects with status filter"""
+        # Create projects with different statuses
+        pid1 = self.project_manager.create_project(self.user_id, "Active Project 1")
+        pid2 = self.project_manager.create_project(self.user_id, "Archived Project")
+        pid3 = self.project_manager.create_project(self.user_id, "Active Project 2")
+        
+        # Update one to archived status
+        self.project_manager.update_project(pid2, status="archived")
+        
+        # List with status filter
+        active_projects = self.project_manager.list_user_projects(self.user_id, status="active")
+        archived_projects = self.project_manager.list_user_projects(self.user_id, status="archived")
+        
+        # Verify filtering works
+        self.assertEqual(len(active_projects), 2)
+        self.assertEqual(len(archived_projects), 1)
+        self.assertEqual(archived_projects[0]["name"], "Archived Project")
+        
+    def test_list_user_projects_no_status_returns_all(self):
+        """Test that calling list_user_projects without status returns all projects"""
+        self.project_manager.create_project(self.user_id, "Project 1")
+        self.project_manager.create_project(self.user_id, "Project 2")
+        self.project_manager.create_project(self.user_id, "Project 3")
+        
+        all_projects = self.project_manager.list_user_projects(self.user_id)
+        self.assertEqual(len(all_projects), 3)
+
     def test_update_project_success(self):
         pid = self.project_manager.create_project(self.user_id, "Old Name")
         result = self.project_manager.update_project(pid, name="New Name", status="archived")
@@ -67,6 +96,68 @@ class Test_Project(unittest.TestCase):
         proj = self.project_manager.get_project(pid)
         self.assertEqual(proj["name"], "New Name")
         self.assertEqual(proj["status"], "archived")
+
+    def test_update_project_no_valid_updates(self):
+        """Test update_project with no valid fields returns False"""
+        pid = self.project_manager.create_project(self.user_id, "Test Project")
+        original = self.project_manager.get_project(pid)
+        
+        # Try to update with invalid fields (should be filtered out)
+        result = self.project_manager.update_project(pid, invalid_field="should be ignored")
+        
+        # Should return False because no valid fields were provided
+        self.assertFalse(result)
+        
+        # Project should remain unchanged
+        updated = self.project_manager.get_project(pid)
+        self.assertEqual(updated["name"], original["name"])
+        self.assertEqual(updated["status"], original["status"])
+
+    def test_update_project_multiple_fields(self):
+        """Test updating multiple allowed fields at once"""
+        pid = self.project_manager.create_project(self.user_id, "Original", "Original Desc")
+        
+        result = self.project_manager.update_project(
+            pid, 
+            name="Updated Name",
+            description="Updated Description",
+            status="archived"
+        )
+        
+        self.assertTrue(result)
+        proj = self.project_manager.get_project(pid)
+        self.assertEqual(proj["name"], "Updated Name")
+        self.assertEqual(proj["description"], "Updated Description")
+        self.assertEqual(proj["status"], "archived")
+
+    def test_update_project_only_name(self):
+        """Test updating only the name field"""
+        pid = self.project_manager.create_project(self.user_id, "Old Name", "Keep Desc")
+        original_desc = self.project_manager.get_project(pid)["description"]
+        
+        result = self.project_manager.update_project(pid, name="New Name Only")
+        
+        self.assertTrue(result)
+        proj = self.project_manager.get_project(pid)
+        self.assertEqual(proj["name"], "New Name Only")
+        self.assertEqual(proj["description"], original_desc)
+
+    def test_update_project_filters_invalid_fields(self):
+        """Test that update_project filters out invalid fields"""
+        pid = self.project_manager.create_project(self.user_id, "Test")
+        
+        # Try to update with mix of valid and invalid fields
+        result = self.project_manager.update_project(
+            pid,
+            name="Valid Update",
+            user_id="should be ignored",  # Not in allowed_fields
+            created_at="should be ignored"  # Not in allowed_fields
+        )
+        
+        # Should still return True because name is valid
+        self.assertTrue(result)
+        proj = self.project_manager.get_project(pid)
+        self.assertEqual(proj["name"], "Valid Update")
 
     def test_update_project_nonexistent_id(self):
         fake_id = str(uuid.uuid4())
@@ -102,6 +193,7 @@ class Test_Project(unittest.TestCase):
         self.assertEqual(stats["total_tasks"], 0)
         self.assertEqual(stats["completed_tasks"], 0)
         self.assertEqual(stats["completion_percentage"], 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()
