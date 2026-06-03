@@ -69,6 +69,6 @@ class Test_comment(unittest.TestCase):
         fake_comment_id = str(uuid.uuid4())
         result = self.comment_manager.delete_comment(fake_comment_id)
         self.assertFalse(result)
-
+        
 if __name__ == '__main__':
     unittest.main()

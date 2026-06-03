@@ -3,6 +3,7 @@ from Project_Work import User, Comment, Database, Project, Task
 import unittest
 import sqlite3
 import uuid
+from unittest.mock import patch
 # Assuming the main code is in a file named task_manager.py
 # from task_manager import Database, User, Project, Task, Comment
 
@@ -92,6 +93,54 @@ class Test_User(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.user_manager.update_user(user2_id, email="user1@test.com")
+
+    def test_get_user_not_found(self):
+        """Rule: Invalid user_id -> Return None"""
+        fake_id = str(uuid.uuid4())
+        user = self.user_manager.get_user(fake_id)
+        self.assertIsNone(user)
+
+    def test_update_user_duplicate_username(self):
+        """Rule: Username violates UNIQUE constraint -> Raise ValueError"""
+        self.user_manager.create_user("target_user", "target@test.com", "pass")
+        user2_id = self.user_manager.create_user("other_user", "other@test.com", "pass")
+
+        with self.assertRaises(ValueError) as context:
+            self.user_manager.update_user(user2_id, username="target_user")
+        
+        self.assertIn("is already taken", str(context.exception))
+
+    def test_list_users_success(self):
+        """Rule: Retrieve paginated list of users"""
+        self.user_manager.create_user("list1", "list1@test.com", "pass")
+        self.user_manager.create_user("list2", "list2@test.com", "pass")
+        
+        users = self.user_manager.list_users()
+        
+        self.assertIsInstance(users, list)
+        self.assertTrue(len(users) >= 2)
+        usernames = [u['username'] for u in users]
+        self.assertIn("list1", usernames)
+        self.assertIn("list2", usernames)
+
+    def test_create_user_generic_integrity_error(self):
+        """Rule: Unknown integrity error during creation -> Raise generic ValueError"""
+        # Patch the entire cursor object on the database instance instead of the SQLite class
+        with patch.object(self.user_manager.db, 'cursor') as mock_cursor:
+            mock_cursor.execute.side_effect = sqlite3.IntegrityError("unknown constraint")
+            with self.assertRaises(ValueError) as context:
+                self.user_manager.create_user("fail_user", "fail@test.com", "pass")
+            self.assertIn("Could not create user due to integrity constraint", str(context.exception))
+
+    def test_update_user_generic_integrity_error(self):
+        """Rule: Unknown integrity error during update -> Raise generic ValueError"""
+        user_id = self.user_manager.create_user("gen_upd", "gen_upd@test.com", "pass")
+        
+        with patch.object(self.user_manager.db, 'cursor') as mock_cursor:
+            mock_cursor.execute.side_effect = sqlite3.IntegrityError("unknown constraint")
+            with self.assertRaises(ValueError) as context:
+                self.user_manager.update_user(user_id, username="new_gen_upd")
+            self.assertIn("Could not update user", str(context.exception))
 
 if __name__ == '__main__':
     unittest.main()
