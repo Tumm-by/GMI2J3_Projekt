@@ -13,8 +13,11 @@ variables:
 
 steps:
 - script: |
-    git clone --mirror https://$(GithubUserName):$(GithubToken)@$(GithubPath) source
+    git clone https://$(GithubUserName):$(GithubToken)@$(GithubPath) source
     cd source
+
+    echo "Adding Azure DevOps remote"
+    git remote add azure https://$(AzureUserName):$(AzureToken)@$(AzurePath)
 
     echo "Fetching all refs from GitHub"
     git fetch --all --prune
