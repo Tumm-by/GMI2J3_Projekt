@@ -583,8 +583,6 @@ class AuditLog:
                 raise ValueError("This user doesn't exist")
             elif "NOT NULL constraint failed: audit_logs.action" in error_message:
                 raise ValueError("Action cannot be null")
-            else:
-                raise ValueError("Invalid audit log data")
 
         return log_id
 
