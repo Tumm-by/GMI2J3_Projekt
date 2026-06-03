@@ -6,7 +6,7 @@
 trigger:
   branches:
     include:
-      - main
+      - "*"
 
 variables:
 - group: TokensForSyncing
@@ -15,6 +15,12 @@ steps:
 - script: |
     git clone https://$(GithubUserName):$(GithubToken)@$(GithubPath) source
     cd source
+
+    echo "Adding Azure DevOps remote"
+    git remote add azure https://$(AzureUserName):$(AzureToken)@$(AzurePath)
+
+    echo "Fetching all refs from GitHub"
+    git fetch --all --prune
 
     git remote add azure https://$(AzureUserName):$(AzureToken)@$(AzurePath)
     git push azure --mirror
