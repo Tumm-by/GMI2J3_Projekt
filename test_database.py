@@ -1,9 +1,7 @@
 import unittest
 from unittest.mock import patch
 import Project_Work
-import re
 import sqlite3
-import uuid
 
 EXPECTED_SQL = """
             PRAGMA foreign_keys = ON;

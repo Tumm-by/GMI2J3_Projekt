@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import patch
 import Project_Work
-import re
-import sqlite3
 import uuid
 
 class Test_Notification(unittest.TestCase):

@@ -1,9 +1,6 @@
 import unittest
 from unittest.mock import patch
 import Project_Work
-import re
-import sqlite3
-import uuid
 
 class Test_Taskmanager(unittest.TestCase):
     TEST_USERNAME = "testUser123"
